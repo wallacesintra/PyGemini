@@ -11,6 +11,7 @@ from rich.markdown import Markdown
 
 gemini = MyGeminiApi()
 console = Console()
+# md = Markdown()
 
 class MyPrompt(cmd.Cmd):
     intro = 'Welcome to the gemini console. Type help or ? to list commands.\n'

@@ -2,7 +2,10 @@
 
 import google.generativeai as genai
 
+from writePrompt import write_file
+
 genai.configure(api_key= "your_gemini_api_key")
+
 
 
 
@@ -18,4 +21,9 @@ class MyGeminiApi():
 
     def generate(self, text):
         response = self.generativeModel.generate_content(text)
+
+        title = self.generativeModel.generate_content("generate a title for " + response.text)
+        write_file("history_" +title.text + ".md", response.text)
+
         return response.text
+    
