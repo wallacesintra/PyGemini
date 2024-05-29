@@ -8,14 +8,23 @@ from testGemini import MyGeminiApi
 
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.text import Text
+from rich.table import Table
 
 gemini = MyGeminiApi()
 console = Console()
+text = Text()
+
+table = Table(title="History")
+table.add_column("Title", style="bold yellow")
+
+titles = []
+
 
 class MyPrompt(cmd.Cmd):
-    intro = 'Welcome to the gemini console. Type help or ? to list commands.\n'
+    intro = console.print("Welcome to the gemini console. Type help or ? to list commands.", style="bold blue")
     prompt = 'PyGemini> '
-    # file = None
+
 
     def do_exit(self, arg):
         'Exit the console'
@@ -34,11 +43,43 @@ class MyPrompt(cmd.Cmd):
     def do_clear(self, arg):
         'Clear the screen'
         os.system('clear')
+        
 
     def default(self, arg):
         'Handle input that is not a recognized command'
         console.print(Markdown(gemini.generate(arg)), style="bold green")
 
+    def do_history(self, arg):
+        'View history'
+        history = os.listdir('history')
+
+        if(len(history) == 0):
+            console.print("No history available", style="bold red")
+            return
+        
+        elif arg == "":
+            for file in history:
+                # console.print(file, style="bold yellow")
+                title = file.split(".")[0]
+                titles.append(title)
+                table.add_row(title)
+            
+            console.print(table)
+            console.print("'history <title>' to view content", style="bold blue")
+            return
+
+        
+        os.system('python3 -m rich.markdown history/{}.md'.format(arg))
+        
+        # console.print(file_content , style="bold green")
+    def complete_history(self, text, line, begidx, endidx):
+        if not text:
+            # completions = os.listdir('history')
+            completions = titles
+        else:
+            # completions = [f for f in os.listdir('history') if f.startswith(text)]
+            completions = [f for f in titles if f.startswith(text)]
+        return completions
 
 
 if __name__ == '__main__':

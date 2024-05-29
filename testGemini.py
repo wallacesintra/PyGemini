@@ -7,12 +7,7 @@ from writePrompt import write_file
 genai.configure(api_key= "your_gemini_api_key")
 
 
-
-
-model = genai.GenerativeModel('gemini-pro')
-
-# response = model.generate_content("Gemini API")
-# print(response.text)
+# model = genai.GenerativeModel('gemini-pro')
 
 
 class MyGeminiApi():
@@ -22,8 +17,11 @@ class MyGeminiApi():
     def generate(self, text):
         response = self.generativeModel.generate_content(text)
 
-        title = self.generativeModel.generate_content("generate a title for " + response.text)
-        write_file("history_" +title.text + ".md", response.text)
+        title = self.generativeModel.generate_content("generate a title and the title should not be more than 5 words in text for " + response.text)
+        
+        write_file(title.text + ".md", response.text)
 
-        return response.text
+        responseText = response.text
+
+        return responseText
     
