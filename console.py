@@ -10,10 +10,12 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.text import Text
 from rich.table import Table
+from util import Util
 
 gemini = MyGeminiApi()
 console = Console()
 text = Text()
+util = Util()
 
 table = Table(title="History")
 table.add_column("Title", style="bold yellow")
@@ -60,7 +62,8 @@ class MyPrompt(cmd.Cmd):
         elif arg == "":
             for file in history:
                 # console.print(file, style="bold yellow")
-                title = file.split(".")[0]
+                # title = file.split(".")[0]
+                title = util.replace_underscore(file.split(".")[0])
                 titles.append(title)
                 table.add_row(title)
             
@@ -68,8 +71,8 @@ class MyPrompt(cmd.Cmd):
             console.print("'history <title>' to view content", style="bold blue")
             return
 
-        
-        os.system('python3 -m rich.markdown history/{}.md'.format(arg))
+        selected_file = util.replace_whitespace(arg) + ".md"
+        os.system('python3 -m rich.markdown history/{}'.format(selected_file))
         
         # console.print(file_content , style="bold green")
     def complete_history(self, text, line, begidx, endidx):
