@@ -2,9 +2,8 @@
 
 import cmd
 import os
-# import sys
 
-from testGemini import MyGeminiApi
+from Gemini_api import MyGeminiApi
 
 from rich.console import Console
 from rich.markdown import Markdown
@@ -56,13 +55,11 @@ class MyPrompt(cmd.Cmd):
         history = os.listdir('history')
 
         if(len(history) == 0):
-            console.print("No history available", style="bold red")
+            console.print("No history available", style="bold yellow")
             return
         
         elif arg == "":
             for file in history:
-                # console.print(file, style="bold yellow")
-                # title = file.split(".")[0]
                 title = util.replace_underscore(file.split(".")[0])
                 titles.append(title)
                 table.add_row(title)
@@ -83,6 +80,11 @@ class MyPrompt(cmd.Cmd):
             # completions = [f for f in os.listdir('history') if f.startswith(text)]
             completions = [f for f in titles if f.startswith(text)]
         return completions
+    
+    def do_clear_history(self, arg):
+        'Clear history'
+        os.system('rm -rf history/*')
+        console.print("History cleared", style="bold red")
 
 
 if __name__ == '__main__':
